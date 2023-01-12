@@ -1,0 +1,32 @@
+@extends('layouts.app')
+
+@section('content')
+<body>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Descripcion
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($categorias as $c)
+                <tr> 
+                    <td>
+                        {{$c->categoria_nombre}}  
+                    </td>
+                    <td>
+                        {{$c->categoria_descripcion}}  
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</body>
+@endsection

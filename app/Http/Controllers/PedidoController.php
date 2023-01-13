@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use App\Models\detalle_pedido;
 use App\Models\Producto;
+use App\Models\Region;
+use App\Models\Provincia;
+use App\Models\Comuna;
 use App\Models\Categoria;
 use App\Models\Subcategoria;
 use Illuminate\Contracts\Session\Session;
@@ -25,12 +28,14 @@ class PedidoController extends Controller
     }
 
     public function generarPedido(){
-            return view('generarPedido');    
+        $Region = Region::all();
+        return view('generarPedido',compact('Region'));    
     }
     
     public function insertarPedido(Request $request){
-            $pedido = Pedido::create($request->except(['_token']) + ['pedidos_fecha' => Carbon::now()]);
+            $pedido = Pedido::create($request->except(['_token','Region','Provincia','Comuna']) + ['pedidos_fecha' => Carbon::now()]);
             $pedidoid = $pedido->pedidos_id;
+            session(['comuna' => $request->Comuna]);
             session(['pedidoid' => $pedidoid]);
             session(['cliente' => $pedido->pedidos_cliente]);
             session(['serviceValue' => 0]);
@@ -102,8 +107,9 @@ class PedidoController extends Controller
     $pedido->save();
     //actualizar valor de envio
     if($count==0){
+        $Comuna = session('comuna');
         $invocador="insertar";
-        $this->cotizar($invocador,$producto->producto_valor, $producto->producto_alto,$producto->producto_profundidad,$producto->producto_ancho, 
+        $this->cotizar($invocador,$Comuna,$producto->producto_valor, $producto->producto_alto,$producto->producto_profundidad,$producto->producto_ancho, 
         $producto->producto_peso);
         
     }
@@ -121,6 +127,7 @@ public function cancelarPedido(){
         }
         $detpede->each->delete();
         
+        session()->forget('comuna');
         session()->forget('pedidoid');
         session()->forget('cliente');
         session()->forget('serviceValue');
@@ -129,6 +136,7 @@ public function cancelarPedido(){
 }
 
 public function terminarPedido(){
+    session()->forget('comuna');
         session()->forget('cliente');
         session()->forget('pedidoid');
         session()->forget('serviceValue');
@@ -167,7 +175,8 @@ public function eliminarProducto($id){
             $stockn = $stocka + $detalle_pedido->dt_cantidad;
             $producto->producto_stock = $stockn;
             $invocador="eliminar";
-            $this->cotizar($invocador,$producto->producto_valor, $producto->producto_alto,$producto->producto_profundidad,$producto->producto_ancho, 
+            $Comuna = session('comuna');
+            $this->cotizar($invocador,$Comuna,$producto->producto_valor, $producto->producto_alto,$producto->producto_profundidad,$producto->producto_ancho, 
             $producto->producto_peso);
             $producto->save();
             $pedido->save();
@@ -179,7 +188,7 @@ public function eliminarProducto($id){
     return redirect('agregarProducto');
 }
 
-public function cotizar($invocador,$producto_valor,$producto_alto,$producto_profundidad,$producto_ancho,$producto_peso){
+public function cotizar($invocador,$Comuna,$producto_valor,$producto_alto,$producto_profundidad,$producto_ancho,$producto_peso){
     $client = new \GuzzleHttp\Client();
     $response = $client->request('POST', 'https://testservices.wschilexpress.com/rating/api/v1.0/rates/courier', [
         'headers' => [
@@ -188,8 +197,8 @@ public function cotizar($invocador,$producto_valor,$producto_alto,$producto_prof
             'Ocp-Apim-Subscription-Key' => env('CHILEXPRESS_API_KEY')
         ],
         'json' => [
-            "originCountyCode" => "STGO",
-            "destinationCountyCode" => "PROV",
+            "originCountyCode" => "RANC",
+            "destinationCountyCode" => $Comuna,
             "package" => [
                 'weight' => $producto_peso,
                 'height' => $producto_alto,
@@ -202,11 +211,12 @@ public function cotizar($invocador,$producto_valor,$producto_alto,$producto_prof
             "deliveryTime" => 2
         ]
     ]);
+    
     $data = json_decode($response->getBody()->getContents());
-    if($data->data->courierServiceOptions[1]->additionalServices){
-        $precio = $data->data->courierServiceOptions[1]->additionalServices[0]->serviceValue + $data->data->courierServiceOptions[1]->serviceValue;
+    if($data->data->courierServiceOptions[0]->additionalServices){
+        $precio = $data->data->courierServiceOptions[0]->additionalServices[0]->serviceValue + $data->data->courierServiceOptions[0]->serviceValue;
     }else{
-        $precio = $data->data->courierServiceOptions[1]->serviceValue;
+        $precio = $data->data->courierServiceOptions[0]->serviceValue;
     }
     if($invocador=="insertar"){
         session()->increment('serviceValue', $precio);
@@ -215,6 +225,42 @@ public function cotizar($invocador,$producto_valor,$producto_alto,$producto_prof
     }
     
 }
+
+public function Provincia(Request $request){
+    if(isset($request->texto)){
+        $Provincia = Provincia::where('region_id','=', $request->texto)->get();
+        return response()->json(
+            [
+                'lista' => $Provincia,
+                'success' => true
+            ]
+            );
+            }else{
+                return response()->json(
+                    [
+                        'success' => false
+                    ]
+                    );
+    }
+}
+public function Comuna(Request $request){
+    if(isset($request->texto)){
+        $Comuna = Comuna::where('provincia_id','=', $request->texto)->get();
+            return response()->json(
+                [
+                    'lista' => $Comuna,
+                    'success' => true
+                ]
+            );
+    }else{
+        return response()->json(
+            [
+                'success' => false
+            ]
+        );
+    }
+}
+
     /**
      * Show the form for creating a new resource.
      *

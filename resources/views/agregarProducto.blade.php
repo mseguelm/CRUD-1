@@ -13,7 +13,7 @@
         </h4>
         @if(session()->has('serviceValue'))
         <h4>
-            Valor aproximado de envio: ${{number_format(session('serviceValue'),0,"",".")}}
+            Valor aproximado de envio por Chilexpress: ${{number_format(session('serviceValue'),0,"",".")}}
         </h4>
         @endif
         <div class="buscador">

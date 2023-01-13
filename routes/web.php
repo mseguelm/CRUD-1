@@ -25,6 +25,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::post('/Provincia', [App\Http\Controllers\PedidoController::class,'Provincia']);
+Route::post('/Comuna', [App\Http\Controllers\PedidoController::class,'Comuna']);
+
 Route::middleware('CheckLogin')->group(function(){
     Route::get('/generarPedido', [App\Http\Controllers\PedidoController::class,'generarPedido']);
     route::get('/insertarProducto',[App\Http\Controllers\PedidoController::class,'insertarProducto']);

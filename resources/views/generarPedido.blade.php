@@ -26,6 +26,25 @@
                     <label for="pedidos_correo" class="control-label">Correo</label>
                     <input style="width: 400px" type="email" id="pedidos_correo" name="pedidos_correo" class="form-control" value="jose@arce.cl" required>
                 </div>
+                <div class="form-group">
+                    <label  style="margin-top: 20px" for="_Region" class="control-label">Region</label>
+                    <select name="Region" id="_Region" class="form-control" required>
+                    <option value="">---Selecciona una Opcion---</option>
+                        @foreach($Region as $reg)
+                            <option value="{{$reg->region_id}}">{{$reg->region_nom}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="margin-top: 20px" for="Provincia" class="control-label">Provincia</label>
+                    <select name="Provincia" id="_Provincia" class="form-control" required>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="margin-top: 20px " for="Comuna" class="control-label">Comuna</label>
+                    <select name="Comuna" id="_Comuna" class="form-control" required>
+                    </select>
+                </div>
                 <br>
                 <div class="form-group">
                     <input  type="submit" class="btn btn-primary" value="Generar pedido">
@@ -33,20 +52,61 @@
         </form>
     @endif
     </div>
-</body>
-@endsection
-<script>
 
-function validarN() {
-  var rut = document.getElementById("Numero").value;
-
-  var regex = /^\d{8}$/;
-  if (!regex.test(rut)) {
-    alert("Debe ingresar un numero con el formato correcto");
-    return false;
-  }else{
-    return true;
-  }
-}
+    <script>
+        const csrfToken = document.head.querySelector("[name~=csrf-token][content]").content;
+             
+                document.getElementById('_Region').addEventListener('change',(e)=>{
+        fetch('Provincia',{
+            method : 'POST',
+            body: JSON.stringify({texto: e.target.value}),
+            headers:{
+                'Content-Type' : 'application/json',
+                "X-CSRF-Token" : csrfToken
+            }
+        }).then(response =>{
+            return response.json()
+        }).then(data =>{
+            var opciones = "<option value=''> Elegir</option>"
+            for (let i in data.lista){
+                opciones+= '<option value ="'+data.lista[i].provincia_id+'">'+data.lista[i].provincia_nom+'</option>';
+            }
+            document.getElementById("_Provincia").innerHTML = opciones;
+        }).catch(error => console.error(error));
+    })
+                document.getElementById('_Provincia').addEventListener('change', (e)=>{
+                fetch('Comuna',{
+                    method: 'POST',
+                    body: JSON.stringify({texto: e.target.value}),
+                    headers:{
+                        'Content-Type': 'application/json',
+                        "X-CSRF-Token": csrfToken
+            
+                    }
+                }).then(response =>{
+                    return response.json()
+                }).then ( data =>{
+                    var opciones = "<option value=''> Elegir</option>"
+                    for (let i in data.lista){
+                        opciones+= '<option value ="'+data.lista[i].comuna_abreviatura+'">'+data.lista[i].comuna_nom+'</option>';
+                    }
+                    document.getElementById("_Comuna").innerHTML = opciones;
+            
+                }).catch(error =>console.error(error));
+            })
+        
+        function validarN() {
+          var rut = document.getElementById("Numero").value;
+        
+          var regex = /^\d{8}$/;
+          if (!regex.test(rut)) {
+            alert("Debe ingresar un numero con el formato correcto");
+            return false;
+          }else{
+            return true;
+          }
+        }
 
 </script>
+</body>
+@endsection

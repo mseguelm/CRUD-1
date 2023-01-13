@@ -52,6 +52,7 @@ class LoginController extends Controller
         
         $request->session()->forget('serviceValue');
         $request->session()->forget('productos');
+        $request->session()->forget('comuna');
         return $this->loggedOut($request) ?: redirect('/home');
     }
 }

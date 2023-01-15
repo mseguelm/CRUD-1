@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +17,7 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
+
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -23,54 +25,63 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                          Ingresar Pedidos
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ __('Ingresar Pedidos') }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="/generarPedido">Ingresar pedido</a></li>
-                          <li><a class="dropdown-item" href="/agregarProducto">Agregar productos</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><a class="dropdown-item" href="/generarPedido">{{ __('Ingresar pedido') }}</a></li>
+                            <li><a class="dropdown-item" href="/agregarProducto">{{ __('Agregar productos') }}</a></li>
+                            <li><a class="dropdown-item" href="#">{{ __('Something else here') }}</a></li>
                         </ul>
-                      </div>
+                    </div>
                     <ul class="navbar-nav me-auto">
                         <li>
-                            <a class="nav-link" href="/verPedidos">Ver pedidos</a>
-                        </li>   
+                            <a class="nav-link" href="/verPedidos">{{ __('Ver pedidos') }}</a>
+                        </li>
                     </ul>
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                          Productos
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ __('Productos') }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="/productos">Ver productos</a></li>
-                          <li><a class="dropdown-item" href="/productos/create">Agregar productos</a></li>
+                            <li><a class="dropdown-item" href="/productos">{{ __('Ver productos') }}</a></li>
+                            <li><a class="dropdown-item" href="/productos/create">{{ __('Agregar productos') }}</a>
+                            </li>
                         </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                          Categorias
+                    </div>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ __('Categorias') }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="/categorias">Ver categorias</a></li>
-                          <li><a class="dropdown-item" href="/categorias/create">Agregar categorias</a></li>
+                            <li><a class="dropdown-item" href="/categorias">{{ __('Ver categorias') }}</a></li>
+                            <li><a class="dropdown-item" href="/categorias/create">{{ __('Agregar categorias') }}</a>
+                            </li>
                         </ul>
-                      </div>
-                      <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                          Subcategorias
+                    </div>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ __('Subcategorias') }}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="/subcategoria">Ver subcategorias</a></li>
-                          <li><a class="dropdown-item" href="/subcategoria/create">Agregar subcategorias</a></li>
+                            <li><a class="dropdown-item" href="/subcategoria">{{ __('Ver subcategorias') }}</a></li>
+                            <li><a class="dropdown-item"
+                                    href="/subcategoria/create">{{ __('Agregar subcategorias') }}</a></li>
                         </ul>
-                      </div>
+                    </div>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
@@ -89,17 +100,19 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </div>
@@ -115,4 +128,5 @@
         </main>
     </div>
 </body>
+
 </html>

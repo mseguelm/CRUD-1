@@ -7,10 +7,10 @@
             <thead>
                 <tr>
                     <th>
-                        Nombre
+                        {{__('Nombre')}}
                     </th>
                     <th>
-                        Descripcion
+                        {{__('Descripcion')}}
                     </th>
                 </tr>
             </thead>

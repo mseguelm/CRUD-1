@@ -1,112 +1,122 @@
 @extends('layouts.app')
 
 @section('content')
-<body>
-    <div class="container">
 
-  
-    @if (session()->has('cliente'))
-        <h3>Hay un pedido sin terminar</h3>
-        @else
-        <form action="/insertarPedido" method="POST" onsubmit="return validarN()" >
-            {{ csrf_field() }}
-                <div class="form-group">
-                    <label for="pedidos_cliente" class="control-label">Nombre del cliente:</label>
-                    <input style="width: 400px" type="text" id="pedidos_cliente" name="pedidos_cliente" class="form-control" value="Jose" required>
-                </div>
-                <div class="form-group">
-                    <label for="pedidos_direccion" class="control-label">Direccion:</label>
-                    <input style="width: 400px" type="text" id="pedidos_direccion" name="pedidos_direccion" class="form-control" value="Avenida" required>
-                </div>
-                <div class="form-group">
-                    <label for="pedidos_numero" class="control-label">Numero:</label>
-                    <input style="width: 400px" type="number" id="pedidos_numero" name="pedidos_numero" class="form-control" placeholder="Ingresar numero(12345678)" value="12345678" required>
-                </div>
-                <div class="form-group">
-                    <label for="pedidos_correo" class="control-label">Correo</label>
-                    <input style="width: 400px" type="email" id="pedidos_correo" name="pedidos_correo" class="form-control" value="jose@arce.cl" required>
-                </div>
-                <div class="form-group">
-                    <label  style="margin-top: 20px" for="_Region" class="control-label">Region</label>
-                    <select name="Region" id="_Region" class="form-control" required>
-                    <option value="">---Selecciona una Opcion---</option>
-                        @foreach($Region as $reg)
-                            <option value="{{$reg->region_id}}">{{$reg->region_nom}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style="margin-top: 20px" for="Provincia" class="control-label">Provincia</label>
-                    <select name="Provincia" id="_Provincia" class="form-control" required>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style="margin-top: 20px " for="Comuna" class="control-label">Comuna</label>
-                    <select name="Comuna" id="_Comuna" class="form-control" required>
-                    </select>
-                </div>
-                <br>
-                <div class="form-group">
-                    <input  type="submit" class="btn btn-primary" value="Generar pedido">
-                </div>  
-        </form>
-    @endif
-    </div>
+    <body>
+        <div class="container">
 
-    <script>
-        const csrfToken = document.head.querySelector("[name~=csrf-token][content]").content;
-             
-                document.getElementById('_Region').addEventListener('change',(e)=>{
-        fetch('Provincia',{
-            method : 'POST',
-            body: JSON.stringify({texto: e.target.value}),
-            headers:{
-                'Content-Type' : 'application/json',
-                "X-CSRF-Token" : csrfToken
-            }
-        }).then(response =>{
-            return response.json()
-        }).then(data =>{
-            var opciones = "<option value=''> Elegir</option>"
-            for (let i in data.lista){
-                opciones+= '<option value ="'+data.lista[i].provincia_id+'">'+data.lista[i].provincia_nom+'</option>';
-            }
-            document.getElementById("_Provincia").innerHTML = opciones;
-        }).catch(error => console.error(error));
-    })
-                document.getElementById('_Provincia').addEventListener('change', (e)=>{
-                fetch('Comuna',{
+
+            @if (session()->has('cliente'))
+                <h3>{{__('Hay un pedido sin terminar')}}</h3>
+            @else
+                <form action="/insertarPedido" method="POST" onsubmit="return validarN()">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label for="pedidos_cliente" class="control-label">{{__('Nombre del cliente:')}}</label>
+                        <input style="width: 400px" type="text" id="pedidos_cliente" name="pedidos_cliente"
+                            class="form-control" value="Jose" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pedidos_direccion" class="control-label">{{__('Direccion:')}}</label>
+                        <input style="width: 400px" type="text" id="pedidos_direccion" name="pedidos_direccion"
+                            class="form-control" value="Avenida" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pedidos_numero" class="control-label">{{__('Numero:')}}</label>
+                        <input style="width: 400px" type="number" id="pedidos_numero" name="pedidos_numero"
+                            class="form-control" placeholder="Ingresar numero(12345678)" value="12345678" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pedidos_correo" class="control-label">{{__('Correo')}}</label>
+                        <input style="width: 400px" type="email" id="pedidos_correo" name="pedidos_correo"
+                            class="form-control" value="jose@arce.cl" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="margin-top: 20px" for="_Region" class="control-label">{{__('Region')}}</label>
+                        <select name="Region" id="_Region" class="form-control" required>
+                            <option value="">---Selecciona una Opcion---</option>
+                            @foreach ($Region as $reg)
+                                <option value="{{ $reg->region_id }}">{{ $reg->region_nom }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="margin-top: 20px" for="Provincia" class="control-label">{{__('Provincia')}}</label>
+                        <select name="Provincia" id="_Provincia" class="form-control" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="margin-top: 20px " for="Comuna" class="control-label">{{__('Comuna')}}</label>
+                        <select name="Comuna" id="_Comuna" class="form-control" required>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Generar pedido">
+                    </div>
+                </form>
+            @endif
+        </div>
+
+        <script>
+            const csrfToken = document.head.querySelector("[name~=csrf-token][content]").content;
+
+            document.getElementById('_Region').addEventListener('change', (e) => {
+                fetch('Provincia', {
                     method: 'POST',
-                    body: JSON.stringify({texto: e.target.value}),
-                    headers:{
+                    body: JSON.stringify({
+                        texto: e.target.value
+                    }),
+                    headers: {
                         'Content-Type': 'application/json',
                         "X-CSRF-Token": csrfToken
-            
                     }
-                }).then(response =>{
+                }).then(response => {
                     return response.json()
-                }).then ( data =>{
+                }).then(data => {
                     var opciones = "<option value=''> Elegir</option>"
-                    for (let i in data.lista){
-                        opciones+= '<option value ="'+data.lista[i].comuna_abreviatura+'">'+data.lista[i].comuna_nom+'</option>';
+                    for (let i in data.lista) {
+                        opciones += '<option value ="' + data.lista[i].provincia_id + '">' + data.lista[i]
+                            .provincia_nom + '</option>';
+                    }
+                    document.getElementById("_Provincia").innerHTML = opciones;
+                }).catch(error => console.error(error));
+            })
+            document.getElementById('_Provincia').addEventListener('change', (e) => {
+                fetch('Comuna', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        texto: e.target.value
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "X-CSRF-Token": csrfToken
+
+                    }
+                }).then(response => {
+                    return response.json()
+                }).then(data => {
+                    var opciones = "<option value=''> Elegir</option>"
+                    for (let i in data.lista) {
+                        opciones += '<option value ="' + data.lista[i].comuna_abreviatura + '">' + data.lista[i]
+                            .comuna_nom + '</option>';
                     }
                     document.getElementById("_Comuna").innerHTML = opciones;
-            
-                }).catch(error =>console.error(error));
-            })
-        
-        function validarN() {
-          var rut = document.getElementById("Numero").value;
-        
-          var regex = /^\d{8}$/;
-          if (!regex.test(rut)) {
-            alert("Debe ingresar un numero con el formato correcto");
-            return false;
-          }else{
-            return true;
-          }
-        }
 
-</script>
-</body>
+                }).catch(error => console.error(error));
+            })
+
+            function validarN() {
+                var rut = document.getElementById("Numero").value;
+
+                var regex = /^\d{8}$/;
+                if (!regex.test(rut)) {
+                    alert("Debe ingresar un numero con el formato correcto");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        </script>
+    </body>
 @endsection

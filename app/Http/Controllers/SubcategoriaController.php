@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreSubCategoriaRequest;
+use App\Http\Resources\SubCategoriaResource;
+use App\Http\Resources\SubCategoriaCollection;
+use App\Http\Resources\CategoriaResource;
+use App\Http\Resources\CategoriaCollection;
 
 class SubcategoriaController extends Controller
 {
@@ -18,7 +23,7 @@ class SubcategoriaController extends Controller
      */
     public function index()
     {
-        $subcategorias = Subcategoria::withTrashed()->with('categoria')->get();
+        $subcategorias = new SubCategoriaCollection(Subcategoria::withTrashed()->with('categoria')->get());
         return view('subcategoria.index',compact('subcategorias'));
     }
 
@@ -29,7 +34,7 @@ class SubcategoriaController extends Controller
      */
     public function create()
     {
-        $categorias = Categoria::all();
+        $categorias = new CategoriaCollection(Categoria::all());
         return view ('subcategoria.create', compact('categorias'));
     }
 
@@ -39,7 +44,7 @@ class SubcategoriaController extends Controller
      * @param  \App\Http\Requests\StoreSubcategoriaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSubCategoriaRequest $request)
     {
         $subcategorias = $request->except('_token');
         Subcategoria::insert($subcategorias);

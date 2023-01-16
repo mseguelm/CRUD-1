@@ -15,6 +15,11 @@ class Categoria extends Model
     protected $primaryKey ='categoria_id';
     protected $dates = ['deleted_at'];
     
+    protected $fillable = [
+        'categoria_nombre',
+        'categoria_descripcion',
+    ];
+
     public function Subcategoria(){
         return $this->hasMany(Subcategoria::class,'categoria_id','categoria_id');
     }

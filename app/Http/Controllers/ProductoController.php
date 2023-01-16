@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreProductoRequest;
+use App\Http\Resources\ProductoResource;
+use App\Http\Resources\ProductoCollection;
+use App\Http\Resources\CategoriaResource;
+use App\Http\Resources\CategoriaCollection;
+
 
 class ProductoController extends Controller
 {
@@ -19,14 +25,14 @@ class ProductoController extends Controller
     public function index(?Request $request)
     {
         if($request && $request->has('producto_nombre')) {
-            $productos = Producto::withTrashed()->where('producto_nombre', 'LIKE', '%' . $request->producto_nombre . '%')->get();
-            return view('productos.index',compact('productos'));
+            $productos = new ProductoCollection(Producto::withTrashed()->where('producto_nombre', 'LIKE', '%' . $request->producto_nombre . '%')->get());
+
         }else{
-            $productos = Producto::withTrashed()->with('Categoria')->get();
-            return view('productos.index',compact('productos'));
+            $productos = new ProductoCollection(Producto::withTrashed()->with('Categoria')->get());
             }
-        
+        return view('productos.index',compact('productos'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -35,7 +41,7 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        $categorias = Categoria::all();
+        $categorias = new CategoriaCollection(Categoria::all());
         return view ('productos.create', compact('categorias'));
     }
 
@@ -45,10 +51,10 @@ class ProductoController extends Controller
      * @param  \App\Http\Requests\StoreProductoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
         $producto = $request->except('_token');
-        Producto::insert($producto);
+        Producto::create($producto);
         return redirect('productos');
     }
 

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreCategoriaRequest;
+use App\Http\Resources\CategoriaResource;
+use App\Http\Resources\CategoriaCollection;
 
 class CategoriaController extends Controller
 {
@@ -17,7 +20,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::withTrashed()->get();
+        $categorias = new CategoriaCollection(Categoria::withTrashed()->get());
         return view('categorias.index',compact('categorias'));
     }
 
@@ -37,10 +40,10 @@ class CategoriaController extends Controller
      * @param  \App\Http\Requests\StoreCategoriaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoriaRequest $request)
     {
         $categoria = $request->except('_token');
-        Categoria::insert($categoria);
+        Categoria::create($categoria);
         return redirect('categorias');
     }
 
